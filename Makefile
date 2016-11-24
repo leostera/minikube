@@ -1,4 +1,4 @@
-.PHONY: minikube xhyve
+.PHONY:
 
 all:
 	./minikube-install.sh
