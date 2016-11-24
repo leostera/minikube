@@ -4,3 +4,4 @@ all:
 	./minikube-install.sh
 	./minikube-configure.sh
 	./xhyve.sh
+	./dnsmasq.sh
