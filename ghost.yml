@@ -1,0 +1,51 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: ghost
+spec:
+  rules:
+  - host: ghost.dev
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ghost
+          servicePort: 80
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ghost
+spec:
+  selector:
+    app: ghost
+  ports:
+    - port: 80
+      targetPort: 2368
+      name: web
+  clusterIP: None
+
+---
+
+kind: PetSet
+apiVersion: apps/v1alpha1
+metadata:
+  name: ghost
+spec:
+  serviceName: "ghost"
+  replicas: 1
+  template:
+    metadata:
+      name: ghost
+      labels:
+        app: ghost
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      containers:
+        - image: ghost
+          name: ghost
+          ports:
+            - containerPort: 2368
