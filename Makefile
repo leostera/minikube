@@ -1,6 +1,6 @@
-.PHONY: 
+.PHONY: minikube xhyve
 
 all:
-	brew install minikube docker-machine-driver-xhyve
-	sudo chown root:wheel $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
-	sudo chmod u+s $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
+	./minikube-install.sh
+	./minikube-configure.sh
+	./xhyve.sh
