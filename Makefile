@@ -8,6 +8,7 @@ all: | install configure start
 
 configure:
 	$(SH)/minikube-configure.sh
+	$(SH)/dnsmasq-configure.sh
 
 start:
 	$(K) apply -f platform/
