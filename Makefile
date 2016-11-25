@@ -1,12 +1,22 @@
 .PHONY:
 
-all:
-	./minikube-install.sh
-	./minikube-configure.sh
-	./xhyve.sh
-	./dnsmasq.sh
-	./kubectl-install.sh
-	kubectl apply -f default-backend.yml
-	kubectl apply -f ghost.yml
+SH = ./scripts
+K  = kubectl
+
+
+all: | install configure start
+
+configure:
+	$(SH)/minikube-configure.sh
+
+start:
+	$(K) apply -f platform/
 	minikube dashboard
 	open http://ghost.dev
+
+install:
+	$(SH)/minikube-install.sh
+	$(SH)/dnsmasq-install.sh
+	$(SH)/kubectl-install.sh
+	$(SH)/xhyve-install.sh
+
