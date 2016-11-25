@@ -8,4 +8,5 @@ all:
 	./kubectl-install.sh
 	kubectl apply -f default-backend.yml
 	kubectl apply -f ghost.yml
+	minikube dashboard
 	open http://ghost.dev
