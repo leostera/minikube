@@ -1,13 +1,26 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: elasticsearch
+spec:
+  rules:
+  - host: elasticsearch.dev
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: elasticsearch
+          servicePort: 9200
+
+---
+
 kind: Service
 apiVersion: v1
 metadata:
   name: elasticsearch
-  labels:
-    component: elasticsearch
 spec:
-  type: LoadBalancer
   selector:
-    component: elasticsearch
+    app: elasticsearch
   ports:
   - name: http
     port: 9200
@@ -15,21 +28,24 @@ spec:
   - name: transport
     port: 9300
     protocol: TCP
+  clusterIP: None
 
 ---
 
-kind: Deployment
-apiVersion: extensions/v1beta1
+kind: PetSet
+apiVersion: apps/v1alpha1
 metadata:
   name: elasticsearch
-  labels:
-    app: elasticsearch
 spec:
+  serviceName: "elasticsearch"
+  replicas: 1
   template:
     metadata:
+      name: elasticsearch
       labels:
         app: elasticsearch
       annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
         pod.alpha.kubernetes.io/init-containers: '[
           {
             "name": "sysctl",
