@@ -2,6 +2,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: kibana
+  namespace: kube-system
 spec:
   rules:
   - host: kibana.dev
@@ -18,6 +19,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: kibana
+  namespace: kube-system
 spec:
   selector:
     app: kibana
@@ -32,11 +34,13 @@ kind: PetSet
 apiVersion: apps/v1alpha1
 metadata:
   name: kibana
+  namespace: kube-system
 spec:
   serviceName: "kibana"
   replicas: 1
   template:
     metadata:
+      namespace: kube-system
       name: kibana
       labels:
         app: kibana
@@ -53,7 +57,7 @@ spec:
               cpu: 1000m
           env:
             - name: "ELASTICSEARCH_URL"
-              value: "http://elasticsearch.default:9200"
+              value: "http://elasticsearch:9200"
           ports:
             - containerPort: 5601
               name: ui

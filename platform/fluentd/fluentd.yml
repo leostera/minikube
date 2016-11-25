@@ -1,21 +1,22 @@
-apiVersion: extensions/v1beta1
 kind: DaemonSet
+apiVersion: extensions/v1beta1
 metadata:
   name: fluentd
   namespace: kube-system
   labels:
     app: fluentd
-    kubernetes.io/cluster-service: "true"
 spec:
   template:
     metadata:
       labels:
         app: fluentd
-        kubernetes.io/cluster-service: "true"
     spec:
       containers:
       - name: fluentd
+        securityContext:
+          privileged: true
         image: hub.ostera.io/fluentd
+        imagePullPolicy: Never
         resources:
           limits:
             memory: 500Mi
@@ -28,6 +29,9 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
+        - name: mntsda1
+          mountPath: /mnt/sda1
+          readOnly: true
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog
@@ -36,3 +40,6 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: mntsda1
+        hostPath:
+          path: /mnt/sda1

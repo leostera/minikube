@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+
+gem 'fluentd', '0.14.9'
+gem 'fluent-plugin-elasticsearch', '1.9.0'
+gem 'fluent-plugin-kubernetes_metadata_filter', '0.26.2'
