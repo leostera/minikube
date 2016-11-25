@@ -1,0 +1,59 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: kibana
+spec:
+  rules:
+  - host: kibana.dev
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kibana
+          servicePort: 5601
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: kibana
+spec:
+  selector:
+    app: kibana
+  ports:
+    - port: 5601
+      name: ui
+  clusterIP: None
+
+---
+
+kind: PetSet
+apiVersion: apps/v1alpha1
+metadata:
+  name: kibana
+spec:
+  serviceName: "kibana"
+  replicas: 1
+  template:
+    metadata:
+      name: kibana
+      labels:
+        app: kibana
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      containers:
+        - name: kibana
+          image: kibana:5.0.1
+          resources:
+            requests:
+              cpu: 200m
+            limits:
+              cpu: 1000m
+          env:
+            - name: "ELASTICSEARCH_URL"
+              value: "http://elasticsearch.default:9200"
+          ports:
+            - containerPort: 5601
+              name: ui
