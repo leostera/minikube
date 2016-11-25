@@ -1,6 +1,8 @@
 .PHONY: build
 
-all: build
+all: build restart
+
+restart:
 	kubectl delete -f fluentd.yml
 	kubectl apply  -f fluentd.yml
 
