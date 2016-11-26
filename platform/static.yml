@@ -2,6 +2,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: tldr
+  namespace: apps
 spec:
   rules:
   - host: tldr.dev
@@ -18,6 +19,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: tldr
+  namespace: apps
 spec:
   selector:
     app: tldr
@@ -31,12 +33,14 @@ kind: PetSet
 apiVersion: apps/v1alpha1
 metadata:
   name: tldr
+  namespace: apps
 spec:
   serviceName: "tldr"
   replicas: 1
   template:
     metadata:
       name: tldr
+      namespace: apps
       labels:
         app: tldr
       annotations:
