@@ -1,0 +1,56 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: tldr
+spec:
+  rules:
+  - host: tldr.dev
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tldr
+          servicePort: 80
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: tldr
+spec:
+  selector:
+    app: tldr
+  ports:
+    - port: 80
+  clusterIP: None
+
+---
+
+kind: PetSet
+apiVersion: apps/v1alpha1
+metadata:
+  name: tldr
+spec:
+  serviceName: "tldr"
+  replicas: 1
+  template:
+    metadata:
+      name: tldr
+      labels:
+        app: tldr
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      containers:
+        - image: nginx:mainline
+          name: tldr
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: here
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: here
+          hostPath:
+            path: /Users/leostera/repos/ostera/tldr.jsx
