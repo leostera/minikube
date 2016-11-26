@@ -15,4 +15,6 @@
 
 `prometheus.dev`, time series and alarms.
 
+`grafana.dev`, for dashboarding.
+
 `ghost.dev`, as a simple app.
