@@ -4,19 +4,19 @@ SH = ./scripts
 K  = kubectl
 
 
-all: | install configure start
+all: | install configure images start
 
 configure:
 	$(SH)/minikube-configure.sh
 	$(SH)/dnsmasq-configure.sh
-	cd platform/fluentd && make build
+
+images:
+	$(SH)/build-images.sh
 
 start:
 	$(K) apply -f platform/namespaces.yml
 	$(K) apply -f platform/fluentd/
 	$(K) apply -f platform/
-	minikube dashboard
-	open http://ghost.dev
 
 stop:
 	$(K) delete -f platform/ --now
