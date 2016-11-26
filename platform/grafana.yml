@@ -1,0 +1,105 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: grafana
+  namespace: platform
+spec:
+  rules:
+  - host: grafana.dev
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: grafana
+          servicePort: 3000
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: grafana
+  namespace: platform
+spec:
+  selector:
+    app: grafana
+  ports:
+    - port: 3000
+  clusterIP: None
+
+---
+
+kind: PetSet
+apiVersion: apps/v1alpha1
+metadata:
+  name: grafana
+  namespace: platform
+spec:
+  serviceName: "grafana"
+  replicas: 1
+  template:
+    metadata:
+      namespace: platform
+      name: grafana
+      labels:
+        app: grafana
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:3.1.1
+          resources:
+            requests:
+              cpu: 500m
+              memory: 100Mi
+            limits:
+              cpu: 1000m
+              memory: 300Mi
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: dashboards
+              mountPath: /usr/share/grafana/public/dashboards
+      volumes:
+        - name: dashboards
+          configMap:
+            name: grafana
+            items:
+              - key: cluster.dashboard.json
+                path: home.json
+
+---
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: grafana-importer
+  namespace: platform
+  labels:
+    app: grafana
+    role: importer
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name: grafana-importer
+      image: giantswarm/tiny-tools
+      command: ["/bin/sh", "/opt/import.sh"]
+      volumeMounts:
+        - name: import
+          mountPath: /opt/
+        - name: sources
+          mountPath: /opt/sources/
+  volumes:
+    - name: sources
+      configMap:
+        name: grafana
+        items:
+          - key: prometheus.source.json
+            path: prometheus.source.json
+    - name: import
+      configMap:
+        name: grafana
+        items:
+          - key: import.sh
+            path: import.sh
