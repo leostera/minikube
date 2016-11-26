@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   name: default-http-backend
+  namespace: platform
 spec:
   replicas: 1
   selector:
@@ -10,6 +11,7 @@ spec:
     metadata:
       labels:
         app: default-http-backend
+      namespace: platform
     spec:
       terminationGracePeriodSeconds: 60
       containers:
@@ -44,6 +46,7 @@ metadata:
   labels:
     app: default-http-backend
   name: default-http-backend
+  namespace: platform
 spec:
   ports:
   - port: 80
@@ -60,18 +63,19 @@ spec:
 apiVersion: v1
 kind: ReplicationController
 metadata:
+  namespace: platform
   name: nginx-ingress-controller
   labels:
-    k8s-app: nginx-ingress-lb
+    app: nginx-ingress-lb
 spec:
   replicas: 1
   selector:
-    k8s-app: nginx-ingress-lb
+    app: nginx-ingress-lb
   template:
     metadata:
+      namespace: platform
       labels:
-        k8s-app: nginx-ingress-lb
-        name: nginx-ingress-lb
+        app: nginx-ingress-lb
     spec:
       terminationGracePeriodSeconds: 60
       containers:
@@ -102,4 +106,4 @@ spec:
           hostPort: 443
         args:
         - /nginx-ingress-controller
-        - --default-backend-service=default/default-http-backend
+        - --default-backend-service=platform/default-http-backend

@@ -2,7 +2,7 @@ kind: DaemonSet
 apiVersion: extensions/v1beta1
 metadata:
   name: fluentd
-  namespace: kube-system
+  namespace: platform
   labels:
     app: fluentd
 spec:
@@ -16,7 +16,7 @@ spec:
         securityContext:
           privileged: true
         image: hub.ostera.io/fluentd
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         resources:
           limits:
             memory: 500Mi

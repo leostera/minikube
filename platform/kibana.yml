@@ -2,7 +2,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: kibana
-  namespace: kube-system
+  namespace: platform
 spec:
   rules:
   - host: kibana.dev
@@ -19,7 +19,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: kibana
-  namespace: kube-system
+  namespace: platform
 spec:
   selector:
     app: kibana
@@ -34,13 +34,13 @@ kind: PetSet
 apiVersion: apps/v1alpha1
 metadata:
   name: kibana
-  namespace: kube-system
+  namespace: platform
 spec:
   serviceName: "kibana"
   replicas: 1
   template:
     metadata:
-      namespace: kube-system
+      namespace: platform
       name: kibana
       labels:
         app: kibana

@@ -2,7 +2,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: prometheus
-  namespace: kube-system
+  namespace: platform
 spec:
   rules:
   - host: prometheus.dev
@@ -23,7 +23,7 @@ metadata:
   labels:
     app: prometheus
   name: prometheus
-  namespace: kube-system
+  namespace: platform
 spec:
   selector:
     app: prometheus
@@ -39,7 +39,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: kube-system
+  namespace: platform
 spec:
   replicas: 1
   selector:
@@ -48,7 +48,7 @@ spec:
   template:
     metadata:
       name: prometheus
-      namespace: kube-system
+      namespace: platform
       labels:
         app: prometheus
     spec:

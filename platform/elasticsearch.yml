@@ -2,7 +2,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: elasticsearch
-  namespace: kube-system
+  namespace: platform
 spec:
   rules:
   - host: elasticsearch.dev
@@ -19,7 +19,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: elasticsearch
-  namespace: kube-system
+  namespace: platform
 spec:
   selector:
     app: elasticsearch
@@ -38,13 +38,13 @@ kind: PetSet
 apiVersion: apps/v1alpha1
 metadata:
   name: elasticsearch
-  namespace: kube-system
+  namespace: platform
 spec:
   serviceName: "elasticsearch"
   replicas: 1
   template:
     metadata:
-      namespace: kube-system
+      namespace: platform
       name: elasticsearch
       labels:
         app: elasticsearch

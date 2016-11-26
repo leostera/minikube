@@ -1,0 +1,11 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: platform
+
+---
+
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: apps
